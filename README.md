@@ -24,8 +24,8 @@
 
 1. **克隆仓库**：
    ```bash
-   git clone https://github.com/your-username/ConsoleSystem.git
-   cd ConsoleSystem
+   git clone https://github.com/your-username/EasyConsole.git
+   cd EasyConsole
    ```
 
 2. **添加项目到你的解决方案**：
