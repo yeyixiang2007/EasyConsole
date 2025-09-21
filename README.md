@@ -95,6 +95,59 @@ System 模块：
 [Info] [ConsoleController] 控制台数据已清理
 ```
 
+### Unity UI 集成
+
+`EasyConsole` 支持将命令行集成到 Unity 的 UI 系统中。你可以使用 `TMP_Text`（TextMeshPro）作为输出文本框，`TMP_InputField` 作为输入框，并通过按钮或快捷键（如 `...` 触发补全）实现命令补全。以下是一个示例：
+
+```csharp
+using EasyConsole;
+using TMPro;
+using UnityEngine;
+
+public class UnityConsole : MonoBehaviour
+{
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private TMP_Text outputText;
+    [SerializeField] private Button suggestionButton;
+    private ConsoleController console;
+
+    void Start()
+    {
+        var commandManager = new CommandManager();
+        var outputHandler = new UnityOutputHandler(outputText);
+        console = new ConsoleController(commandManager, outputHandler);
+        inputField.onEndEdit.AddListener(async input => await console.ProcessInputAsync(input));
+        suggestionButton.onClick.AddListener(() => ApplySuggestion());
+    }
+
+    private void ApplySuggestion()
+    {
+        var suggestions = console.GetSuggestions(inputField.text).ToList();
+        if (suggestions.Any())
+        {
+            inputField.text = suggestions[0];
+            inputField.MoveTextEnd(false);
+        }
+    }
+}
+
+public class UnityOutputHandler : IOutputHandler
+{
+    private readonly TMP_Text outputText;
+
+    public UnityOutputHandler(TMP_Text text)
+    {
+        outputText = text;
+    }
+
+    public async Task WriteAsync(string message, LogLevel level)
+    {
+        outputText.text += $"[{level}] {message}\n";
+        await Task.Yield();
+    }
+}
+```
+
 ## 命令说明
 
 - `hello`：打印“你好，世界！”。
