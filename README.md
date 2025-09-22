@@ -24,7 +24,7 @@
 
 1. **克隆仓库**：
    ```bash
-   git clone https://github.com/your-username/EasyConsole.git
+   git clone https://github.com/yeyixiang2007/EasyConsole.git
    cd EasyConsole
    ```
 
