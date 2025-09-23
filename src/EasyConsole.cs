@@ -129,7 +129,7 @@ namespace EasyConsole
         }
 
         /// <summary>
-        /// 获取命令补全建议。
+        /// 获取命令补全建议，支持非连续但顺序正确的字符匹配。
         /// </summary>
         /// <param name="input">用户输入的前缀。</param>
         /// <returns>匹配的命令名称列表。</returns>
@@ -138,9 +138,36 @@ namespace EasyConsole
             if (string.IsNullOrWhiteSpace(input))
                 return Enumerable.Empty<string>();
 
+            string inputLower = input.Trim().Split(' ')[0].ToLower();
             return _commands.Keys
-                .Where(cmd => cmd.StartsWith(input.Trim().Split(' ')[0].ToLower(), StringComparison.OrdinalIgnoreCase))
+                .Where(cmd => IsSubsequenceMatch(inputLower, cmd))
                 .OrderBy(cmd => cmd);
+        }
+
+        /// <summary>
+        /// 检查输入字符串是否为命令名称的子序列（非连续但顺序正确）。
+        /// </summary>
+        /// <param name="input">输入字符串。</param>
+        /// <param name="command">命令名称。</param>
+        /// <returns>是否匹配。</returns>
+        private bool IsSubsequenceMatch(string input, string command)
+        {
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(command))
+                return false;
+
+            int inputIndex = 0;
+            int commandIndex = 0;
+
+            while (inputIndex < input.Length && commandIndex < command.Length)
+            {
+                if (char.ToLower(input[inputIndex]) == char.ToLower(command[commandIndex]))
+                {
+                    inputIndex++;
+                }
+                commandIndex++;
+            }
+
+            return inputIndex == input.Length;
         }
     }
 
