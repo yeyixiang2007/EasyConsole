@@ -18,6 +18,13 @@
 // 本文件包含命令管理、输出处理和历史记录管理的完整实现，采用依赖注入和异步编程模式。
 // </remarks>
 
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace EasyConsole
 {
     /// <summary>
@@ -106,7 +113,7 @@ namespace EasyConsole
         /// </summary>
         /// <param name="name">命令名称。</param>
         /// <returns>命令实例，或 null 如果不存在。</returns>
-        public ICommand GetCommand(string name)
+        public ICommand? GetCommand(string name)
         {
             _commands.TryGetValue(name.ToLower(), out var command);
             return command;
