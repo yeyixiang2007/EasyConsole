@@ -187,29 +187,6 @@ namespace EasyConsole
     }
 
     /// <summary>
-    /// 示例命令：清空控制台。
-    /// </summary>
-    public class ClearCommand : ICommand
-    {
-        private readonly ConsoleController _controller;
-
-        public ClearCommand(ConsoleController controller)
-        {
-            _controller = controller ?? throw new ArgumentNullException(nameof(controller));
-        }
-
-        public string Name => "clear";
-        public string Description => "清空控制台内容和历史记录。用法：clear";
-        public string Module => "System";
-
-        public async Task ExecuteAsync(string[] args, IOutputHandler output)
-        {
-            _controller.Clear();
-            await output.WriteAsync("控制台已清空", LogLevel.Info);
-        }
-    }
-
-    /// <summary>
     /// 示例命令：列出所有可用命令。
     /// </summary>
     public class HelpCommand : ICommand
@@ -291,7 +268,6 @@ namespace EasyConsole
         private void RegisterDefaultCommands()
         {
             _commandManager.RegisterCommand(new HelloCommand());
-            _commandManager.RegisterCommand(new ClearCommand(this));
             _commandManager.RegisterCommand(new HelpCommand(_commandManager));
         }
 
@@ -386,7 +362,6 @@ namespace EasyConsole
                 try
                 {
                     await cmd.ExecuteAsync(commandArgs, _outputHandler);
-                    await _outputHandler.WriteAsync($"[ConsoleController] 成功执行命令：{command}", LogLevel.Info);
                 }
                 catch (Exception ex)
                 {
